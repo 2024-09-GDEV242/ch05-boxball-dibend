@@ -63,4 +63,22 @@ public class BoxBall {
     public void erase() {
         canvas.eraseCircle(x, y, diameter);
     }
+    
+    /**
+     * Get the x-position of the ball.
+     * 
+     * @return The x-coordinate of the ball's position.
+     */
+    public int getXPosition() {
+        return x;
+    }
+
+    /**
+     * Get the y-position of the ball.
+     * 
+     * @return The y-coordinate of the ball's position.
+     */
+    public int getYPosition() {
+        return y;
+    }
 }
