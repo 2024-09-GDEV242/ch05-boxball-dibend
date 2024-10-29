@@ -81,4 +81,27 @@ public class BoxBall {
     public int getYPosition() {
         return y;
     }
+    
+    /**
+     * Move the ball within the box, bouncing off the walls as needed.
+     */
+    public void move() {
+        // Erase the ball at the current position
+        erase();
+
+        // Update the position
+        x += xSpeed;
+        y += ySpeed;
+
+        // Check for collision with the box walls and reverse direction if necessary
+        if (x <= xLeftBound || x + diameter >= xLeftBound + boxWidth) {
+            xSpeed = -xSpeed;
+        }
+        if (y <= yTopBound || y + diameter >= yTopBound + boxHeight) {
+            ySpeed = -ySpeed;
+        }
+
+        // Draw the ball at the new position
+        draw();
+    }
 }
