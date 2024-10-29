@@ -1,7 +1,6 @@
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 
 /**
  * Class BallDemo - a short demonstration showing animation with the 
@@ -54,65 +53,67 @@ public class BallDemo
             }
         }
     }
-    
+
     /**
      * Draws a rectangular box on the canvas and simulates bouncing balls within it.
      * 
-     * @param numBalls  The number of balls to create inside the box.
-     * @param boxX      The x-coordinate of the top-left corner of the box.
-     * @param boxY      The y-coordinate of the top-left corner of the box.
-     * @param boxWidth  The width of the box.
-     * @param boxHeight The height of the box.
+     * This method creates a specified number of balls within a rectangular area 
+     * on the canvas, defined by the parameters for the box's position and size. 
+     * Each ball moves within the box and "bounces" off the walls when it reaches 
+     * the edges. The box outline is redrawn in each iteration of the animation 
+     * loop to ensure that the boundaries remain clearly visible even if the balls 
+     * move close to or touch the walls.
+     * 
+     * @param numBalls  The number of balls to create inside the box. Must be positive.
+     * @param boxX      The x-coordinate of the top-left corner of the box. Must be non-negative.
+     * @param boxY      The y-coordinate of the top-left corner of the box. Must be non-negative.
+     * @param boxWidth  The width of the box. Must be positive and within canvas bounds.
+     * @param boxHeight The height of the box. Must be positive and within canvas bounds.
+     * 
+     * @throws IllegalArgumentException if any parameters are out of bounds, such as:
+     *                                  - numBalls is less than 1.
+     *                                  - boxX or boxY are negative.
+     *                                  - boxWidth or boxHeight are non-positive or exceed canvas size.
      */
     public void boxBounce(int numBalls, int boxX, int boxY, int boxWidth, int boxHeight) {
-        // Validate parameters
+        // Validate parameters for box boundaries and number of balls
+        if (numBalls < 1) {
+            throw new IllegalArgumentException("Number of balls must be positive.");
+        }
         if (boxX < 0 || boxY < 0 || boxWidth <= 0 || boxHeight <= 0) {
-            JOptionPane.showMessageDialog(null,
-                    "Invalid box position or size. Please ensure:\n"
-                    + "- boxX and boxY are non-negative.\n"
-                    + "- boxWidth and boxHeight are positive values.",
-                    "Parameter Error", JOptionPane.WARNING_MESSAGE);
-            return;
+            throw new IllegalArgumentException("Box position and size must be positive and non-negative.");
         }
-
         if (boxX + boxWidth > myCanvas.getSize().width || boxY + boxHeight > myCanvas.getSize().height) {
-            JOptionPane.showMessageDialog(null,
-                    "Box dimensions exceed canvas boundaries. Please ensure:\n"
-                    + "- boxWidth + boxX does not exceed canvas width.\n"
-                    + "- boxHeight + boxY does not exceed canvas height.",
-                    "Parameter Error", JOptionPane.WARNING_MESSAGE);
-            return;
+            throw new IllegalArgumentException("Box dimensions exceed canvas boundaries.");
         }
 
-        if (numBalls <= 0) {
-            JOptionPane.showMessageDialog(null,
-                    "Number of balls must be positive. Please enter a value greater than zero.",
-                    "Parameter Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        
+        // Make the canvas visible to display the animation
         myCanvas.setVisible(true);
 
-        // Draw the box
-        myCanvas.setForegroundColor(Color.BLACK);
-        myCanvas.drawLine(boxX, boxY, boxX + boxWidth, boxY); // Top border
-        myCanvas.drawLine(boxX, boxY, boxX, boxY + boxHeight); // Left border
-        myCanvas.drawLine(boxX + boxWidth, boxY, boxX + boxWidth, boxY + boxHeight); // Right border
-        myCanvas.drawLine(boxX, boxY + boxHeight, boxX + boxWidth, boxY + boxHeight); // Bottom border
-
-        // Create balls inside the box
+        // Create a list to hold the balls that will bounce within the box
         List<BoxBall> balls = new ArrayList<>();
         for (int i = 0; i < numBalls; i++) {
             balls.add(new BoxBall(boxX, boxY, boxWidth, boxHeight, myCanvas));
         }
 
-        // Animate balls inside the box
+        // Animation loop for the balls bouncing within the box
         boolean finished = false;
         while (!finished) {
-            myCanvas.wait(50); // Small delay for animation
+            myCanvas.wait(50); // Small delay between frames to create smooth animation
+
+            // Redraw the box on each iteration to ensure the outline remains visible
+            // This prevents the balls from erasing or "wearing away" the box edges
+            myCanvas.setForegroundColor(Color.BLACK);
+            myCanvas.drawLine(boxX, boxY, boxX + boxWidth, boxY); // Top border
+            myCanvas.drawLine(boxX, boxY, boxX, boxY + boxHeight); // Left border
+            myCanvas.drawLine(boxX + boxWidth, boxY, boxX + boxWidth, boxY + boxHeight); // Right border
+            myCanvas.drawLine(boxX, boxY + boxHeight, boxX + boxWidth, boxY + boxHeight); // Bottom border
+
+            // Move each ball within the box, making sure they "bounce" off the walls
             for (BoxBall ball : balls) {
                 ball.move();
             }
         }
     }
+
 }
