@@ -48,4 +48,9 @@ public class BoxBall {
         this.boxHeight = boxHeight;
         this.canvas = canvas;
     }
+    
+    public void draw() {
+        canvas.setForegroundColor(color);
+        canvas.fillCircle(x, y, diameter);
+    }
 }
