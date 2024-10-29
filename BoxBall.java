@@ -29,5 +29,23 @@ public class BoxBall {
      */
     public BoxBall(int xLeftBound, int yTopBound, int boxWidth, int boxHeight, Canvas canvas) {
         Random rand = new Random();
+        
+        this.diameter = rand.nextInt(20) + 10; // Random diameter between 10 and 30
+        this.x = rand.nextInt(boxWidth - diameter) + xLeftBound;
+        this.y = rand.nextInt(boxHeight - diameter) + yTopBound;
+
+        // Ensure non-zero, non-vertical, and non-horizontal speed
+        do {
+            this.xSpeed = rand.nextInt(SPEED_BOUND * 2) - SPEED_BOUND;
+            this.ySpeed = rand.nextInt(SPEED_BOUND * 2) - SPEED_BOUND;
+        } while (xSpeed == 0 || ySpeed == 0 || xSpeed == SPEED_BOUND || ySpeed == SPEED_BOUND);
+
+        this.color = new Color(rand.nextInt(200), rand.nextInt(200), rand.nextInt(200)); // Random color, avoiding white
+
+        this.xLeftBound = xLeftBound;
+        this.yTopBound = yTopBound;
+        this.boxWidth = boxWidth;
+        this.boxHeight = boxHeight;
+        this.canvas = canvas;
     }
 }
